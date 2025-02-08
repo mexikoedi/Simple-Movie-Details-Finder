@@ -1,0 +1,39 @@
+# -----------------------------------------------------------------
+# .gitignore
+#
+# This file specifies intentionally untracked files to ignore
+# http://git-scm.com/docs/gitignore
+#
+# NOTES:
+# The purpose of gitignore files is to ensure that certain files not
+# tracked by Git remain untracked.
+#
+# To ignore uncommitted changes in a file that is already tracked,
+# use `git update-index --assume-unchanged`.
+#
+# To stop tracking a file that is currently tracked,
+# use `git rm --cached`
+#
+# -----------------------------------------------------------------
+
+# Ignore IntelliJ IDEA project files
+*.iml
+.idea/
+
+# Ignore Gradle files
+.gradle
+/local.properties
+
+# Ignore build output directories
+/build
+/captures
+
+# Ignore external native build directories
+.externalNativeBuild
+.cxx
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore buildSrc build output
+/buildSrc/build/*

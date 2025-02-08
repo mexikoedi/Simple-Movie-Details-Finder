@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <!-- Include all shared preferences for extraction -->
+    <include
+        domain="sharedpref"
+        path="." />
+    <!-- Exclude a specific shared preference file from extraction -->
+    <exclude
+        domain="sharedpref"
+        path="device.xml" />
+    <!-- Include all database files for extraction -->
+    <include
+        domain="database"
+        path="." />
+    <!-- Exclude cache files from extraction -->
+    <exclude
+        domain="file"
+        path="cache/" />
+</data-extraction-rules>
