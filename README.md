@@ -45,11 +45,11 @@ The app also stores the data locally using the Room database. <br>
 This prevents the app from making unnecessary network requests when the same movie is searched again.
 
 ## Examples
-Dark Mode:
+Dark Mode: <br>
 ![Movie Search](https://github.com/user-attachments/assets/9c8b2d3e-cfb4-4cfc-b1d0-3dd6eabdc28e "Movie Search") <br>
 ![Movie Details](https://github.com/user-attachments/assets/372c3851-6833-4981-baf2-c8ddda5971b5 "Movie Details")
 
-Light Mode:
+Light Mode: <br>
 ![Movie Search](https://github.com/user-attachments/assets/307cdcb1-d9f3-4570-935b-bfddf7678a74 "Movie Search") <br>
 ![Movie Details](https://github.com/user-attachments/assets/a76f8e72-3a28-4d00-800e-5cee1f9ed24c "Movie Details")
 
