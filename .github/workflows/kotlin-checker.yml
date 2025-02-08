@@ -1,0 +1,11 @@
+name: Kotlin Static Analysis
+on: push
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Static Analysis Check
+        uses: openMF/kmp-static-analysis-check-action@v1.0.0
