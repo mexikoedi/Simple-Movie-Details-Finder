@@ -6,7 +6,6 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import io.github.mexikoedi.smdf.data.api.Genre
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Entity(tableName = "movies")
