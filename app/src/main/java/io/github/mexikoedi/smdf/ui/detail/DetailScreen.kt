@@ -1,3 +1,5 @@
+package io.github.mexikoedi.smdf.ui.detail
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,8 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
-import io.github.mexikoedi.smdf.ui.detail.DetailViewModel
 import java.time.LocalDate
+import java.time.Year
 import java.time.format.DateTimeFormatter
 import kotlin.math.floor
 
@@ -55,7 +57,7 @@ fun DetailScreen(
                         )
 
                         Text(
-                            "© 2025-${java.time.Year.now()} mexikoedi",
+                            "© 2025-${Year.now()} mexikoedi",
                             style = TextStyle(
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)

@@ -9,7 +9,7 @@ If you are a movie enthusiast or someone who frequently looks up movie details, 
 It provides a quick and easy way to get comprehensive information about movies directly on your Android device.
 
 ## Limitations?
-1) Only Android devices are supported from version 8.0 (API level 26) and above.
+1) Only Android devices are supported from version 11 (API level 30) and above.
 2) No APK file is provided in this repository. You need to build the app yourself to use it. (See [How to use](#How-To-Use) section below.)
 
 ## How to use?

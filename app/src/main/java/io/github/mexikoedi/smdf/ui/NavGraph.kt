@@ -1,6 +1,6 @@
 package io.github.mexikoedi.smdf.ui
 
-import DetailScreen
+import io.github.mexikoedi.smdf.ui.detail.DetailScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
