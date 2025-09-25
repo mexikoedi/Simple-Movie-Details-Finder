@@ -1,10 +1,12 @@
 package io.github.mexikoedi.smdf.data.api
 
 import io.github.mexikoedi.smdf.BuildConfig
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.parameter
+import io.ktor.client.statement.HttpResponse
 
 class TmdbMovieApi(private val client: HttpClient) {
     val baseUrl = "https://image.tmdb.org/t/p/w500"

@@ -5,10 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import io.github.mexikoedi.smdf.ui.NavGraph
-import io.github.mexikoedi.smdf.data.api.TmdbMovieApi
-import io.github.mexikoedi.smdf.ui.theme.SMDFTheme
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.mexikoedi.smdf.data.api.TmdbMovieApi
+import io.github.mexikoedi.smdf.ui.NavGraph
+import io.github.mexikoedi.smdf.ui.theme.SMDFTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint

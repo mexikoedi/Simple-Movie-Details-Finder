@@ -1,12 +1,12 @@
 package io.github.mexikoedi.smdf.data.database
 
 import io.github.mexikoedi.smdf.data.api.Movie
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 
 class LocalMovieRepository @Inject constructor(
     private val localMovieDao: LocalMovieDao

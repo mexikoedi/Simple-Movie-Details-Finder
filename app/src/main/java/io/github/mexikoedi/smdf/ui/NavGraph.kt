@@ -1,11 +1,11 @@
 package io.github.mexikoedi.smdf.ui
 
-import io.github.mexikoedi.smdf.ui.detail.DetailScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import io.github.mexikoedi.smdf.ui.detail.DetailScreen
 import io.github.mexikoedi.smdf.ui.search.SearchScreen
 
 @Composable
