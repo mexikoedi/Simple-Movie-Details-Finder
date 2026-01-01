@@ -55,6 +55,6 @@ Light Mode: <br>
 
 Thanks to [Colin Bankart](https://github.com/Ironwally) for the help with some code parts.
 
-© 2025 mexikoedi
+© 2025-2026 mexikoedi
 
 All rights reserved.
