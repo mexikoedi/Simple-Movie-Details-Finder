@@ -18,6 +18,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v6.0.2
     - name: Run check style
-      uses: dbelyaev/action-checkstyle@v3
+      uses: dbelyaev/action-checkstyle@v3.4.2
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
