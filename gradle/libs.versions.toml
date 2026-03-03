@@ -17,7 +17,7 @@ activityCompose = "1.12.4"
 composeBom = "2026.02.01"
 composeMaterialIconsCore = "1.7.8"
 room = "2.8.4"
-ktor = "3.4.0"
+ktor = "3.4.1"
 coil = "2.7.0"
 
 [libraries]
