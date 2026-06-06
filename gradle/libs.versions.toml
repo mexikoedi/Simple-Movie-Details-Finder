@@ -29,6 +29,7 @@ dagger-compiler = { group = "com.google.dagger", name = "dagger-compiler", versi
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltCompiler" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hiltCompiler" }
+kotlin-metadata-jvm = { group = "org.jetbrains.kotlin", name = "kotlin-metadata-jvm", version.ref = "kotlin" }
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javaxInject" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
