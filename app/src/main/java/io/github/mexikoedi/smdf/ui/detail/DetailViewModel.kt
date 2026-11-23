@@ -18,7 +18,7 @@ class DetailViewModel @Inject constructor(
     private val _movieDetails = MutableStateFlow<Movie?>(null)
     val movieDetails: StateFlow<Movie?> = _movieDetails.asStateFlow()
 
-    fun fetchMovieDetails(movieId: Int) {
+    fun fetchMovieDetails(movieId: Long) {
         viewModelScope.launch {
             repository.getMovieDetails(movieId).collect { movie ->
                 _movieDetails.value = movie

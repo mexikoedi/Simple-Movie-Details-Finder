@@ -12,5 +12,5 @@ interface LocalMovieDao {
     suspend fun addMovies(movies: List<LocalMovie>)
 
     @Query("SELECT * FROM movies WHERE id = :uid")
-    fun getMovieDetails(uid: Int): Flow<LocalMovie>
+    fun getMovieDetails(uid: Long): Flow<LocalMovie>
 }

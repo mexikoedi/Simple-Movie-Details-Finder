@@ -10,27 +10,21 @@ import io.github.mexikoedi.smdf.ui.search.SearchScreen
 
 @Composable
 fun NavGraph(
-    navController: NavHostController = rememberNavController(),
-    baseUrl: String
+    navController: NavHostController = rememberNavController(), baseUrl: String
 ) {
     NavHost(navController = navController, startDestination = "search") {
         composable("search") {
             SearchScreen(
-                baseUrl = baseUrl,
-                onNavigateToDetail = { movieId ->
+                baseUrl = baseUrl, onNavigateToDetail = { movieId ->
                     navController.navigate("detail/$movieId")
-                }
-            )
+                })
         }
 
         composable("detail/{movieId}") { backStackEntry ->
-            val movieId = backStackEntry.arguments?.getString("movieId")?.toInt() ?: 0
+            val movieId = backStackEntry.arguments?.getString("movieId")?.toLong() ?: 0
 
             DetailScreen(
-                movieId = movieId,
-                baseUrl = baseUrl,
-                onNavigateUp = { navController.navigateUp() }
-            )
+                movieId = movieId, baseUrl = baseUrl, onNavigateUp = { navController.navigateUp() })
         }
     }
 }

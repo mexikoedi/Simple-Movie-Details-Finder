@@ -16,9 +16,7 @@ object DatabaseModule {
     @Singleton
     fun provideLocalMovieDatabase(@ApplicationContext app: Context): LocalMovieDatabase {
         return Room.databaseBuilder(
-            app,
-            LocalMovieDatabase::class.java,
-            "local_movie_database"
+            app, LocalMovieDatabase::class.java, "local_movie_database"
         ).build()
     }
 

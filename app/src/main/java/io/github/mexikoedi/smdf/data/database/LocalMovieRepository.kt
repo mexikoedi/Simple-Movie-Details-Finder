@@ -27,7 +27,7 @@ class LocalMovieRepository @Inject constructor(
         emit(Unit)
     }.flowOn(Dispatchers.IO)
 
-    fun getMovieDetails(id: Int): Flow<Movie> {
+    fun getMovieDetails(id: Long): Flow<Movie> {
         return localMovieDao.getMovieDetails(id).map { localMovie ->
             Movie(
                 id = localMovie.id,

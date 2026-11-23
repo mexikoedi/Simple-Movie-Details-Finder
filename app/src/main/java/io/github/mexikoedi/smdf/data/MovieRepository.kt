@@ -12,8 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class MovieRepository @Inject constructor(
-    private val api: TmdbMovieApi,
-    private val localMovieRepository: LocalMovieRepository
+    private val api: TmdbMovieApi, private val localMovieRepository: LocalMovieRepository
 ) {
     fun searchMovies(query: String, page: Int): Flow<List<Movie>> = flow {
         val result = api.searchMovies(query, page)
@@ -22,7 +21,7 @@ class MovieRepository @Inject constructor(
         emit(movies)
     }.flowOn(Dispatchers.IO)
 
-    fun getMovieDetails(movieId: Int): Flow<Movie?> = flow {
+    fun getMovieDetails(movieId: Long): Flow<Movie?> = flow {
         val localMovie = localMovieRepository.getMovieDetails(movieId).firstOrNull()
 
         if (localMovie != null) {
@@ -33,7 +32,7 @@ class MovieRepository @Inject constructor(
                     val updatedLocalMovie =
                         localMovie.copy(genres = remoteMovie.genres, runtime = remoteMovie.runtime)
                     localMovieRepository.addMovies(listOf(updatedLocalMovie)).collect { }
-                    emit(remoteMovie)
+                    emit(updatedLocalMovie)
                 } else {
                     emit(localMovie)
                 }

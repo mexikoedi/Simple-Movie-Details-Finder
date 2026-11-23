@@ -13,28 +13,26 @@ class TmdbMovieApi(private val client: HttpClient) {
 
     suspend fun searchMovies(query: String, page: Int): Result<MovieResultDto> {
         return runCatching {
-            val response: HttpResponse =
-                client.get("https://api.themoviedb.org/3/search/movie") {
-                    parameter("query", query)
-                    parameter("page", page)
-                    parameter("include_adult", false)
-                    parameter("language", "en-US")
-                    header("accept", "application/json")
-                    header("Authorization", "Bearer ${BuildConfig.TMDB_API_KEY}")
-                }
+            val response: HttpResponse = client.get("https://api.themoviedb.org/3/search/movie") {
+                parameter("query", query)
+                parameter("page", page)
+                parameter("include_adult", false)
+                parameter("language", "en-US")
+                header("accept", "application/json")
+                header("Authorization", "Bearer ${BuildConfig.TMDB_API_KEY}")
+            }
 
             response.body()
         }
     }
 
-    suspend fun getMovieDetails(movieId: Int): Result<Movie> {
+    suspend fun getMovieDetails(movieId: Long): Result<Movie> {
         return runCatching {
-            val response: HttpResponse =
-                client.get("https://api.themoviedb.org/3/movie/$movieId") {
-                    parameter("api_key", BuildConfig.TMDB_API_KEY)
-                    header("accept", "application/json")
-                    header("Authorization", "Bearer ${BuildConfig.TMDB_API_KEY}")
-                }
+            val response: HttpResponse = client.get("https://api.themoviedb.org/3/movie/$movieId") {
+                parameter("api_key", BuildConfig.TMDB_API_KEY)
+                header("accept", "application/json")
+                header("Authorization", "Bearer ${BuildConfig.TMDB_API_KEY}")
+            }
 
             response.body()
         }

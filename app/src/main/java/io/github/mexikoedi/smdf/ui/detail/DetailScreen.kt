@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -41,10 +40,9 @@ import java.time.Year
 import java.time.format.DateTimeFormatter
 import kotlin.math.floor
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    movieId: Int,
+    movieId: Long,
     baseUrl: String,
     onNavigateUp: () -> Unit,
     viewModel: DetailViewModel = hiltViewModel()
@@ -56,49 +54,43 @@ fun DetailScreen(
     val movie by viewModel.movieDetails.collectAsState()
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
+        modifier = Modifier.fillMaxSize(), topBar = {
             TopAppBar(
                 title = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "Movie Details",
-                            style = TextStyle(
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Movie Details", style = TextStyle(
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
+                    )
 
-                        Text(
-                            "© 2025-${Year.now()} mexikoedi",
-                            style = TextStyle(
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
-                            )
+                    Text(
+                        "© 2025-${Year.now()} mexikoedi", style = TextStyle(
+                            fontSize = 12.sp,
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
                         )
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateUp) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = Color.White
-                )
+                    )
+                }
+            }, navigationIcon = {
+                IconButton(onClick = onNavigateUp) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
+            }, colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = Color.White
             )
-        }
-    ) { padding ->
+            )
+        }) { padding ->
         movie?.let {
             Column(
                 modifier = Modifier
@@ -121,8 +113,7 @@ fun DetailScreen(
                 }
 
                 Text(
-                    text = it.title,
-                    style = TextStyle(
+                    text = it.title, style = TextStyle(
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
@@ -132,8 +123,7 @@ fun DetailScreen(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Score: ${floor(it.voteAverage * 10)}%",
-                    style = TextStyle(
+                    text = "Score: ${floor(it.voteAverage * 10)}%", style = TextStyle(
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
@@ -148,20 +138,16 @@ fun DetailScreen(
                     } ?: "N/A"
 
                 Text(
-                    text = "Release Date: $releaseDateText",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+                    text = "Release Date: $releaseDateText", style = TextStyle(
+                        fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground
                     )
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Runtime: ${it.runtime} min",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+                    text = "Runtime: ${it.runtime} min", style = TextStyle(
+                        fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground
                     )
                 )
 
@@ -174,10 +160,8 @@ fun DetailScreen(
                 }
 
                 Text(
-                    text = "Genres: $genresText",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+                    text = "Genres: $genresText", style = TextStyle(
+                        fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground
                     )
                 )
 
@@ -186,10 +170,8 @@ fun DetailScreen(
                 val overviewText = it.overview.takeIf { overview -> overview.isNotEmpty() } ?: "N/A"
 
                 Text(
-                    text = overviewText,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onBackground
+                    text = overviewText, style = TextStyle(
+                        fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground
                     )
                 )
             }

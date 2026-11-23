@@ -19,19 +19,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,20 +44,25 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import io.github.mexikoedi.smdf.data.api.Movie
+import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     baseUrl: String,
     onNavigateToDetail: (Long) -> Unit,
-    viewModel: MovieViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
-    var query by rememberSaveable { mutableStateOf("") }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val queryState = rememberTextFieldState(
+        initialText = uiState.query
+    )
 
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
+        modifier = Modifier.fillMaxSize(), topBar = {
             TopAppBar(
                 title = {
                     Row(
@@ -66,8 +71,7 @@ fun SearchScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Movie Search",
-                            style = TextStyle(
+                            "Movie Search", style = TextStyle(
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onPrimary
@@ -75,22 +79,18 @@ fun SearchScreen(
                         )
 
                         Text(
-                            "© 2025-${java.time.Year.now()} mexikoedi",
-                            style = TextStyle(
+                            "© 2025-${java.time.Year.now()} mexikoedi", style = TextStyle(
                                 fontSize = 12.sp,
                                 color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
-                            ),
-                            modifier = Modifier.padding(end = 8.dp)
+                            ), modifier = Modifier.padding(end = 8.dp)
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
+                }, colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = Color.White
                 )
             )
-        }
-    ) { padding ->
+        }) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -98,23 +98,17 @@ fun SearchScreen(
                 .padding(16.dp)
         ) {
             SearchBar(
-                query = query,
-                onQueryChange = {
-                    query = it
-                    viewModel.searchMovies(query)
-                }
-            )
+                queryState = queryState, onQueryChange = {
+                    viewModel.searchMovies(it)
+                })
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (query.isNotEmpty() && uiState.movies.isEmpty()) {
+            if (uiState.query.isNotEmpty() && uiState.movies.isEmpty() && !uiState.isLoading) {
                 Text(
-                    text = "No results found",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.onBackground
-                    ),
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    text = "No results found", style = TextStyle(
+                        fontSize = 16.sp, color = MaterialTheme.colorScheme.onBackground
+                    ), modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             } else if (uiState.movies.isNotEmpty()) {
                 SearchResultsListWithLoadMore(
@@ -127,15 +121,15 @@ fun SearchScreen(
                     },
                     onItemClick = { movie ->
                         onNavigateToDetail(movie.id)
-                    }
-                )
+                    })
             }
         }
     }
 }
 
+@OptIn(FlowPreview::class)
 @Composable
-fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
+fun SearchBar(queryState: TextFieldState, onQueryChange: (String) -> Unit) {
     val borderColor =
         if (MaterialTheme.colorScheme.surface == Color.White) Color.Gray else Color.LightGray
 
@@ -145,23 +139,31 @@ fun SearchBar(query: String, onQueryChange: (String) -> Unit) {
             .height(56.dp)
             .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.medium)
             .border(BorderStroke(1.dp, borderColor), shape = MaterialTheme.shapes.medium)
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        contentAlignment = Alignment.CenterStart
+            .padding(horizontal = 16.dp, vertical = 8.dp), contentAlignment = Alignment.CenterStart
     ) {
         BasicTextField(
-            value = query,
-            onValueChange = onQueryChange,
+            state = queryState,
+            onKeyboardAction = {
+                onQueryChange(queryState.text.toString())
+            },
             textStyle = TextStyle(fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface),
             modifier = Modifier.fillMaxWidth()
         )
 
-        if (query.isEmpty()) {
+        if (queryState.text.isEmpty()) {
             Text(
                 text = "Search for movies...",
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
                 style = TextStyle(fontSize = 16.sp)
             )
         }
+    }
+
+    LaunchedEffect(queryState) {
+        snapshotFlow { queryState.text.toString() }.drop(1).debounce(300.milliseconds)
+            .distinctUntilChanged().collect { text ->
+                onQueryChange(text)
+            }
     }
 }
 
@@ -176,9 +178,7 @@ fun MovieListItem(movie: Movie, baseUrl: String, onClick: () -> Unit) {
             .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.medium)
             .border(BorderStroke(1.dp, borderColor), shape = MaterialTheme.shapes.medium)
             .clickable { onClick() }
-            .padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+            .padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
         Image(
             painter = rememberAsyncImagePainter(model = "$baseUrl${movie.posterPath}"),
             contentDescription = movie.title,
@@ -194,13 +194,11 @@ fun MovieListItem(movie: Movie, baseUrl: String, onClick: () -> Unit) {
         Spacer(modifier = Modifier.width(16.dp))
 
         Text(
-            text = movie.title,
-            style = TextStyle(
+            text = movie.title, style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MaterialTheme.colorScheme.onSurface
-            ),
-            modifier = Modifier.weight(1f)
+            ), modifier = Modifier.weight(1f)
         )
     }
 }
@@ -224,12 +222,9 @@ fun SearchResultsListWithLoadMore(
         ) {
             items(searchResults.size) { index ->
                 MovieListItem(
-                    movie = searchResults[index],
-                    baseUrl = baseUrl,
-                    onClick = {
+                    movie = searchResults[index], baseUrl = baseUrl, onClick = {
                         onItemClick(searchResults[index])
-                    }
-                )
+                    })
             }
         }
 
@@ -244,8 +239,7 @@ fun SearchResultsListWithLoadMore(
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(24.dp)
+                        color = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(24.dp)
                     )
                 } else {
                     Text("Load More")

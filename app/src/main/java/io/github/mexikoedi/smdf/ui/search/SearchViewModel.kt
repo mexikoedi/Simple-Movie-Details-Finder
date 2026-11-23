@@ -10,26 +10,31 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.Job
 
 @HiltViewModel
-class MovieViewModel @Inject constructor(
+class SearchViewModel @Inject constructor(
     private val repository: MovieRepository,
 ) : ViewModel() {
     private var page = 1
+    private var searchJob: Job? = null
+    private var loadMoreJob: Job? = null
     private var _uiState = MutableStateFlow(UIState("", emptyList()))
     val uiState: StateFlow<UIState> = _uiState
 
     fun searchMovies(query: String) {
+        searchJob?.cancel()
+        loadMoreJob?.cancel()
         page = 1
 
         _uiState.update { prev ->
-            prev.copy(query = query, movies = emptyList(), canLoadMore = true)
+            prev.copy(query = query, movies = emptyList(), canLoadMore = true, isLoading = true)
         }
 
-        viewModelScope.launch {
+        searchJob = viewModelScope.launch {
             repository.searchMovies(query, page).collect { movies ->
                 _uiState.update { prev ->
-                    prev.copy(movies = movies, canLoadMore = movies.isNotEmpty())
+                    prev.copy(movies = movies, canLoadMore = movies.isNotEmpty(), isLoading = false)
                 }
             }
         }
@@ -38,7 +43,7 @@ class MovieViewModel @Inject constructor(
     fun loadNextPage() {
         ++page
 
-        viewModelScope.launch {
+        loadMoreJob = viewModelScope.launch {
             _uiState.update { prev ->
                 prev.copy(isLoading = true)
             }
@@ -48,9 +53,7 @@ class MovieViewModel @Inject constructor(
             repository.searchMovies(_uiState.value.query, page).collect { new ->
                 _uiState.update { prev ->
                     prev.copy(
-                        movies = current + new,
-                        isLoading = false,
-                        canLoadMore = new.isNotEmpty()
+                        movies = current + new, canLoadMore = new.isNotEmpty(), isLoading = false,
                     )
                 }
             }
